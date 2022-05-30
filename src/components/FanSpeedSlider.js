@@ -4,7 +4,7 @@ import Slider from "@mui/material/Slider";
 import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 import { initializeApp } from "firebase/app";
-import { getDatabase, ref, set } from "firebase/database";
+import { getDatabase, ref, set, onValue } from "firebase/database";
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBEEad_fHXV4EwnCVpI9Hz5woX94zx9N78",
@@ -19,6 +19,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const firebase = initializeApp(firebaseConfig);
 const database = getDatabase(firebase);
+const fanSpeedRef = ref(database, "/");
 
 function writeFanSpeed(fanSpeed) {
   return set(ref(database, "/"), {
@@ -66,6 +67,14 @@ export default function FanSpeedSlider({ handleChangeBgColor }) {
     handleChangeBgColor(speeds[value].bgColor);
   }, []);
 
+  onValue(fanSpeedRef, (snapshot) => {
+    const data = snapshot.val();
+    if (data.fanSpeed !== value) {
+      setValue(data.fanSpeed);
+      handleChangeBgColor(speeds[data.fanSpeed].bgColor);
+    }
+  });
+
   const handleSliderChange = (event, newValue) => {
     setValue(newValue);
     console.log(newValue);
@@ -86,7 +95,7 @@ export default function FanSpeedSlider({ handleChangeBgColor }) {
     <CircularProgress />
   ) : (
     <Box sx={{ width: 300 }}>
-      <Typography sx={{ fontWeight: "bold", textAlign:"center" }} gutterBottom>
+      <Typography sx={{ fontWeight: "bold", textAlign: "center" }} gutterBottom>
         Fan Speed
       </Typography>
       <Slider
