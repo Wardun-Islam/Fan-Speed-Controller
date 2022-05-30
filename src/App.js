@@ -1,24 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import * as React from "react";
+import FanSpeedSlider from "./components/FanSpeedSlider";
+import Box from "@mui/material/Box";
 
 function App() {
+  const [bgColor, setBgColor] = React.useState("#007000");
+
+  const handleChangeBgColor = (color) => {
+    console.log("color");
+    console.log(color);
+    setBgColor(color);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "100vh",
+        backgroundColor: bgColor,
+      }}
+    >
+      <FanSpeedSlider
+        handleChangeBgColor={(color) => handleChangeBgColor(color)}
+      />
+    </Box>
   );
 }
 
